@@ -4,7 +4,7 @@ request = require 'request'
 
 missing = []
 
-for key in ['USERNAME', 'PASSWORD', 'SLACK_APP', 'SLACK_CHANNEL', 'SLACK_TOKEN']
+for key in ['USERNAME', 'PASSWORD', 'CHANNEL', 'WEBHOOK_URL']
   missing.push key unless key of process.env
 
 throw "Missing environment variables: #{missing.join ', '}" if missing.length
@@ -55,11 +55,9 @@ app.post '/', (req, res) ->
 
   options =
     method: 'POST'
-    uri: "https://#{process.env.SLACK_APP}.slack.com/services/hooks/incoming-webhook"
-    qs:
-      token: process.env.SLACK_TOKEN
+    uri: process.env.WEBHOOK_URL
     json:
-      channel: process.env.SLACK_CHANNEL
+      channel: process.env.CHANNEL
       text: text
       username: 'github'
       icon_url: 'https://slack-assets2.s3-us-west-2.amazonaws.com/10562/img/services/github_48.png'
